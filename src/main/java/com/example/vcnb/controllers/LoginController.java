@@ -46,4 +46,8 @@ public class LoginController {
         userService.save(userRegistrationDto);
         return "redirect:/register?success";
     }
+    @GetMapping("/tables")
+    public String getTables(Model model){
+        return "dashboard/tables";
+    }
 }

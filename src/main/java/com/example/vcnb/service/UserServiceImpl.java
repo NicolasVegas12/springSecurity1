@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,7 @@ public class UserServiceImpl implements IUserService{
     }
 
 
+
     @Override
     public User save(UserRegistrationDto registrationDto) {
         User user = new User(
@@ -42,7 +44,8 @@ public class UserServiceImpl implements IUserService{
                 ,registrationDto.getLastName()
                 , registrationDto.getUserName()
                 ,passwordEncoder.encode(registrationDto.getPassword())
-                , Collections.singletonList(roleRepository.findByName("ADMIN")));
+                , List.of(roleRepository.findByName("ROLE_USER"))
+        );
 
         return userRepository.save(user);
     }
@@ -52,6 +55,8 @@ public class UserServiceImpl implements IUserService{
         return userRepository.findByEmail(username);
     }
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -59,6 +64,7 @@ public class UserServiceImpl implements IUserService{
         if(user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
+        System.out.println(user.toString());
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
